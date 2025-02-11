@@ -21,19 +21,42 @@ router.post("/register", async (req, res) => {
     res.status(500).json(error);
   }
 });
+const verifyToken = (req, res, next) => {
+  const token = req.headers['authorization']?.split(' ')[1]; // Extract token from 'Authorization' header
+  if (!token) return res.status(403).json({ message: 'No token provided' });
 
+  // Verify token
+  jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+    if (err) return res.status(401).json({ message: 'Invalid token' });
+    req.user = decoded; // Attach decoded user data to the request object
+    next();
+  });
+};
+router.get("/user", verifyToken, async (req, res) => {
+  
+  try {
+    //console.log('Authorization Header:', req.headers['authorization']); 
+    const user = await User.findById(req.user._id);
+    if (!user) return res.status(406).json({ message: "User not found" });
+
+    res.json({ username: user.username, email: user.email });
+  } catch (error) {
+    res.status(500).json({ message: "Server error. Please try again." });
+  }
+});
 // Login
 router.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
     const user = await User.findOne({ email });
-
+    
+    console.log(user);
     if (!user) return res.status(404).json({ message: "User not found" });
 
     const validPassword = await bcrypt.compare(password, user.password);
     if (!validPassword) return res.status(400).json({ message: "Invalid credentials" });
 
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "1s" });
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "1h" });
 
     res.json({ token, user: { id: user._id, username: user.username, email: user.email } });
   } catch (error) {
