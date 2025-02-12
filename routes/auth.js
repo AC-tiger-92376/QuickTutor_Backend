@@ -22,9 +22,16 @@ router.post("/register", async (req, res) => {
   }
 });
 const verifyToken = (req, res, next) => {
-  const token = req.headers['authorization']?.split(' ')[1]; // Extract token from 'Authorization' header
+  
+  const authHeader = req.headers['authorization'];
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(403).json({ message: 'No token provided' });
+  }
+  const token = authHeader.split(' ')[1];
+  
+  //const token = req.headers['authorization']?.split(' ')[1]; // Extract token from 'Authorization' header
   if (!token) return res.status(403).json({ message: 'No token provided' });
-
+  console.log("token:", token);
   // Verify token
   jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
     if (err) return res.status(401).json({ message: 'Invalid token' });
@@ -32,11 +39,32 @@ const verifyToken = (req, res, next) => {
     next();
   });
 };
-router.get("/user", verifyToken, async (req, res) => {
+router.get("/user",verifyToken, async (req, res) => {
+  /*
+  const authHeader = req.headers['authorization'];
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(403).json({ message: 'No token provided' });
+  }
+  const token = authHeader.split(' ')[1];
   
+  //const token = req.headers['authorization']?.split(' ')[1]; // Extract token from 'Authorization' header
+  if (!token) return res.status(403).json({ message: 'No token provided' });
+  console.log("token:", token);
+
+  // Verify token
+  jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+    if (err) return res.status(401).json({ message: 'Invalid token' });
+    req.user = decoded; // Attach decoded user data to the request object
+    //next();
+  });
+
+  */
+  console.log("Decoded User:", req.user);
   try {
     //console.log('Authorization Header:', req.headers['authorization']); 
-    const user = await User.findById(req.user._id);
+    const user = await User.findById(req.user.id);
+    /*return res.status(416).json({ message: {user} });*/
+    //console.log("User:", user);
     if (!user) return res.status(406).json({ message: "User not found" });
 
     res.json({ username: user.username, email: user.email });
