@@ -22,6 +22,7 @@ router.post("/register", async (req, res) => {
     res.status(500).json(error);
   }
 });
+/*
 const verifyToken = (req, res, next) => {
   
   const authHeader = req.headers['authorization'];
@@ -40,8 +41,9 @@ const verifyToken = (req, res, next) => {
     next();
   });
 };
-router.get("/user",verifyToken, async (req, res) => {
-  /*
+*/
+router.get("/user", async (req, res) => {
+  
   const authHeader = req.headers['authorization'];
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
     return res.status(403).json({ message: 'No token provided' });
@@ -59,7 +61,7 @@ router.get("/user",verifyToken, async (req, res) => {
     //next();
   });
 
-  */
+  
   console.log("Decoded User:", req.user);
   try {
     //console.log('Authorization Header:', req.headers['authorization']); 
