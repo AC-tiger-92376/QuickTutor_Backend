@@ -19,5 +19,5 @@ app.use("/api/auth", authRoutes);
 
 mongoose
   .connect(process.env.MONGO_URI)
-  .then(() => app.listen(18012, () => console.log("Server running on port 5000")))
+  .then(() => app.listen(18013, () => console.log("Server running on port 5000")))
   .catch((error) => console.log(error));
