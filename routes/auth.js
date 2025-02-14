@@ -23,6 +23,7 @@ router.post("/register", async (req, res) => {
   }
 });
 const transporter = nodemailer.createTransport({
+  service: 'outlook',
   host: process.env.MAIL_HOST,
   port:  process.env.MAIL_PORT,  // TLS
   secure: false,  // Use TLS
