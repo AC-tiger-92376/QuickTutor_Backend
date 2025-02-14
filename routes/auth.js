@@ -2,7 +2,7 @@ const express = require("express");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
-
+const nodemailer = require('nodemailer');
 
 const router = express.Router();
 
@@ -22,6 +22,37 @@ router.post("/register", async (req, res) => {
     res.status(500).json(error);
   }
 });
+const transporter = nodemailer.createTransport({
+  service: 'Outlook',  // or 'hotmail' (both use the same SMTP server)
+  auth: {
+    user: process.env.MAIL_USERNAME,    // your Outlook email
+    pass: process.env.MAIL_PASSWORD, // your Outlook password (or App password)
+  },
+});
+
+// Route to send an email
+router.post('/send-email', async (req, res) => {
+  const { to, subject, text, html } = req.body;  // Extract email details from the request body
+
+  // Set up email data
+  const mailOptions = {
+    from: process.env.MAIL_MAILER,  // your email address
+    to: process.env.MAIL_MAILER,                           // recipient email address
+    subject: subject,                 // subject of the email
+    text: 'Verify',                       // plain text body
+    html: 'html',                       // HTML body (optional)
+  };
+
+  try {
+    // Send email via Nodemailer transporter
+    const info = await transporter.sendMail(mailOptions);
+    res.json({ message: 'Email sent', info });
+  } catch (error) {
+    console.error('Error sending email:', error);
+    res.status(500).json({ error: 'Failed to send email', details: error });
+  }
+});
+
 /*
 const verifyToken = (req, res, next) => {
   
