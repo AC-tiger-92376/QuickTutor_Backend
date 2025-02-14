@@ -24,7 +24,7 @@ router.post("/register", async (req, res) => {
 });
 const transporter = nodemailer.createTransport({
   host: process.env.MAIL_HOST,
-  port: 587,  // TLS
+  port:  process.env.MAIL_PORT,  // TLS
   secure: false,  // Use TLS
   //service: 'outlook',  // or 'hotmail' (both use the same SMTP server)
   auth: {
@@ -39,8 +39,8 @@ router.post('/send-email', async (req, res) => {
 
   // Set up email data
   const mailOptions = {
-    from: process.env.MAIL_MAILER,  // your email address
-    to: process.env.MAIL_MAILER,                           // recipient email address
+    from: process.env.MAIL_USERNAME,  // your email address
+    to: 'philcheen@outlook.com',                           // recipient email address
     subject: subject,                 // subject of the email
     text: 'Verify',                       // plain text body
     html: 'html',                       // HTML body (optional)
