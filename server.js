@@ -2,7 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const cors = require("cors");
-
+const port = process.env.PORT || 5000; 
 const authRoutes = require("./routes/auth");
 
 dotenv.config();
@@ -19,5 +19,5 @@ app.use("/api/auth", authRoutes);
 
 mongoose
   .connect(process.env.MONGO_URI)
-  .then(() => app.listen(18013, () => console.log("Server running on port 5000")))
+  .then(() => app.listen(port, () => console.log("Server running on port 5000")))
   .catch((error) => console.log(error));
