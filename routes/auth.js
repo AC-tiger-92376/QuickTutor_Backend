@@ -23,7 +23,10 @@ router.post("/register", async (req, res) => {
   }
 });
 const transporter = nodemailer.createTransport({
-  service: 'Outlook',  // or 'hotmail' (both use the same SMTP server)
+  host: process.env.MAIL_HOST,
+  port: 587,  // TLS
+  secure: false,  // Use TLS
+  //service: 'outlook',  // or 'hotmail' (both use the same SMTP server)
   auth: {
     user: process.env.MAIL_USERNAME,    // your Outlook email
     pass: process.env.MAIL_PASSWORD, // your Outlook password (or App password)
