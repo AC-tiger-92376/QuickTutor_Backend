@@ -16,7 +16,8 @@ app.use(express.json());
 app.use("/api/auth", authRoutes);
 
 // MongoDB Connection
+
 mongoose
-  .connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+  .connect(process.env.MONGO_URI)
   .then(() => app.listen(5000, () => console.log("Server running on port 5000")))
   .catch((error) => console.log(error));
