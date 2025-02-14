@@ -23,7 +23,7 @@ router.post("/register", async (req, res) => {
   }
 });
 const transporter = nodemailer.createTransport({
-  service: 'outlook',
+  service: 'Outlook',
   host: process.env.MAIL_HOST,
   port:  process.env.MAIL_PORT,  // TLS
   secure: false,  // Use TLS
@@ -31,6 +31,9 @@ const transporter = nodemailer.createTransport({
   auth: {
     user: process.env.MAIL_USERNAME,    // your Outlook email
     pass: process.env.MAIL_PASSWORD, // your Outlook password (or App password)
+  },
+  tls: {
+    rejectUnauthorized: false,      // Optional: Disable certificate validation (for development)
   },
 });
 
@@ -44,7 +47,7 @@ router.post('/send-email', async (req, res) => {
     to: 'philcheen@outlook.com',                           // recipient email address
     subject: subject,                 // subject of the email
     text: 'Verify',                       // plain text body
-    html: 'html',                       // HTML body (optional)
+    html: "<h1>This is a test email sent from Express via SMTP.</h1>"
   };
 
   try {
